@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: events-app
-          image: "{{ required \"image.repository must be set by Jenkins\" .Values.image.repository }}:{{ required \"image.tag must be set by Jenkins\" .Values.image.tag }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"          
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
