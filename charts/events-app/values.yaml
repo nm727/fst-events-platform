@@ -1,17 +1,29 @@
-# Jenkins writes per-environment overrides to envs/<environment>/values.yaml.
+# Base values. Jenkins writes image overrides into envs/<name>/values.yaml.
 replicaCount: 1
 image:
   repository: ""
   tag: ""
   pullPolicy: IfNotPresent
-containerPort: 8080
+containerPort: 8089
 service:
   type: ClusterIP
   port: 80
 resources:
   requests:
-    cpu: 150m
-    memory: 384Mi
+    cpu: 100m
+    memory: 256Mi
   limits:
     cpu: "1"
-    memory: 1Gi
+    memory: 768Mi
+mysql:
+  image: mysql:8.0
+  database: eventsProject
+  username: eventsuser
+  secretName: events-db
+  resources:
+    requests:
+      cpu: 100m
+      memory: 192Mi
+    limits:
+      cpu: "1"
+      memory: 768Mi
