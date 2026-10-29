@@ -17,13 +17,49 @@ spec:
         app.kubernetes.io/name: events-app
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      initContainers:
+        - name: wait-for-mysql
+          image: {{ .Values.mysql.image | quote }}
+          env:
+            - name: MYSQL_PWD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.mysql.secretName }}
+                  key: app-password
+          command:
+            - /bin/sh
+            - -ec
+            - |
+              until mysql -h {{ .Release.Name }}-mysql -u {{ .Values.mysql.username }} -D {{ .Values.mysql.database }} -e "SELECT 1" >/dev/null 2>&1; do
+                echo "Waiting for MySQL to accept connections..."
+                sleep 3
+              done
       containers:
         - name: events-app
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"          
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
               containerPort: {{ .Values.containerPort }}
               protocol: TCP
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://{{ .Release.Name }}-mysql:3306/{{ .Values.mysql.database }}?createDatabaseIfNotExist=true&serverTimezone=UTC"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: {{ .Values.mysql.username | quote }}
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.mysql.secretName }}
+                  key: app-password
+          startupProbe:
+            tcpSocket:
+              port: http
+            periodSeconds: 5
+            failureThreshold: 36
+          readinessProbe:
+            tcpSocket:
+              port: http
+            periodSeconds: 10
           resources:
 {{ toYaml .Values.resources | indent 12 }}
