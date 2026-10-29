@@ -1,0 +1,17 @@
+# Jenkins writes per-environment overrides to envs/<environment>/values.yaml.
+replicaCount: 1
+image:
+  repository: ""
+  tag: ""
+  pullPolicy: IfNotPresent
+containerPort: 8080
+service:
+  type: ClusterIP
+  port: 80
+resources:
+  requests:
+    cpu: 150m
+    memory: 384Mi
+  limits:
+    cpu: "1"
+    memory: 1Gi

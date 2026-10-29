@@ -1,0 +1,43 @@
+# Install once from AWS CloudShell with:
+# kubectl apply -f bootstrap/applicationset.yaml
+# Jenkins creates envs/<environment>/config.json and values.yaml.
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: fst-events
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions:
+    - missingkey=error
+  generators:
+    - git:
+        repoURL: https://github.com/nm727/fst-events-platform.git
+        revision: main
+        files:
+          - path: envs/*/config.json
+  template:
+    metadata:
+      name: 'events-{{ .path.basename }}'
+    spec:
+      project: default
+      sources:
+        - repoURL: https://github.com/nm727/fst-events-platform.git
+          targetRevision: main
+          path: charts/events-app
+          helm:
+            releaseName: 'events-{{ .path.basename }}'
+            valueFiles:
+              - '$values/envs/{{ .path.basename }}/values.yaml'
+        - repoURL: https://github.com/nm727/fst-events-platform.git
+          targetRevision: main
+          ref: values
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{ .namespace }}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
