@@ -1,3 +1,8 @@
+# Généré par Jenkins — build #33 — commit e827ed4 — ne pas modifier à la main
+feature: event
+owner: nour-mustapha
 image:
   repository: nour1mustapha/events-app
-  tag: event-30-7ef3b03
+  tag: event-33-e827ed4
+ingress:
+  host: event.apps.local
