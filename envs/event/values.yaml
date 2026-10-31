@@ -1,8 +1,8 @@
-# Généré par Jenkins — build #43 — commit 947f2cb — ne pas modifier à la main
+# Généré par Jenkins — build #44 — commit 07c1c1a — ne pas modifier à la main
 feature: event
 owner: nour-mustapha
 image:
   repository: nour1mustapha/events-app
-  tag: event-43-947f2cb
+  tag: event-44-07c1c1a
 ingress:
   host: event.apps.local
