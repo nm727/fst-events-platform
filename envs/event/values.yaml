@@ -1,8 +1,8 @@
-# Généré par Jenkins — build #40 — commit a2472cc — ne pas modifier à la main
+# Généré par Jenkins — build #41 — commit 1842090 — ne pas modifier à la main
 feature: event
 owner: nour-mustapha
 image:
   repository: nour1mustapha/events-app
-  tag: event-40-a2472cc
+  tag: event-41-1842090
 ingress:
   host: event.apps.local
