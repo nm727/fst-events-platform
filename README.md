@@ -1,3 +1,3 @@
 # fst-events-platform
 
-testing gitops
+testing gitops workflow
